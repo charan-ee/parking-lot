@@ -9,10 +9,6 @@ public class ParkingSlot {
     private VehicleType vehicleType;
     private boolean isFree = true;
 
-//    public ParkingSlot(){
-//        isFree = true;
-//    }
-
     public ParkingSlot(int slotId, VehicleType type){
         this.slotId = slotId;
         this.vehicleType = type;
@@ -42,11 +38,4 @@ public class ParkingSlot {
         return slotId;
     }
 
-    public String toString() {
-        return "Slot{" +
-                " slotId=" + slotId +
-                ", occupied=" + isFree +
-                ", vehicleType=" + vehicleType +
-                '}';
-    }
 }

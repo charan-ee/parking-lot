@@ -11,9 +11,8 @@ public class ParkingLot {
     private int slotsPerFloor;
     private int noOfFloors;
 
-    ParkingLot(){
+    public ParkingLot(){
     }
-
 
     public ParkingLot(String name,int floors,int slotsPerFloor){
         this.floors = new ArrayList<ParkingFloor>();
@@ -77,12 +76,10 @@ public class ParkingLot {
             for(ParkingSlot slot: floor.getParkingSlots()){
                 if(slot.getVehicleType()==vehicle.getVehicleType() && slot.getStatus()){
                     slot.setOccupied();
-                    Ticket ticket=new Ticket();
-                    ticket.setParkingFloor(floor);
-                    ticket.setSlot(slot);
-                    ticket.setId(this.name+vehicle+slot+floor);
-
+                    Ticket ticket=new Ticket(floor, slot);
+                    ticket.setId(this.name+ "_" + floor.getFloor() + "_" + slot.getSlotId());
                     this.tickets.put(ticket,vehicle);
+                    System.out.println("Parked Vehicle. Ticket ID: " + ticket.getId());
                     return ticket;
                 }
             }
@@ -93,6 +90,8 @@ public class ParkingLot {
     public boolean unPark(Ticket ticket){
         if(tickets.containsKey(ticket)){
             ticket.getSlot().setFree(true);
+            Vehicle vehicle = tickets.get(ticket);
+            System.out.println("Unparked vehicle with Registration Number: " + vehicle.getRegistrationNumber() + " and Color: " + vehicle.getColour());
             tickets.remove(ticket);
             return true;
         }
@@ -134,14 +133,18 @@ public class ParkingLot {
                         if(slot.getVehicleType()==vehicleType && slot.getStatus()==false){
                             tempOccupiedSlots.add(slot.getSlotId());
                         }
-                        System.out.println("Occupied slots for "+vehicleType+" on Floor "+ floor.getFloor() + tempOccupiedSlots);
                     }
+                    System.out.println("Occupied slots for "+vehicleType+" on Floor "+ floor.getFloor() + tempOccupiedSlots);
                 }
             }
 
             default -> throw new IllegalStateException("Unexpected value: " + displayType);
         }
 
+    }
+
+    public String  toString(){
+        return "Created parking lot with " + this.noOfFloors + " floors and "+ this.slotsPerFloor + " slots per floor";
     }
 
 }

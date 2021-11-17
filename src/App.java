@@ -5,46 +5,66 @@ import vehicle.VehicleType;
 import java.util.*;
 
 public class App {
+    private static ParkingLot parkingLot;
+    private static VehicleType type;
     public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String input_command;
+        String[] commands;
+        List<Ticket> ticketList = new ArrayList<>();
 
-        //Default Parking lot
-        ParkingLot parkingLot=new ParkingLot("PR1234",2,6);
+        while(true){
+            input_command = input.nextLine();
+            commands = input_command.split(" ");
+            if(input_command.equals("exit")){
+                break;
+            }
+            switch(commands[0]){
+                case "create_parking_lot" -> {
+                    parkingLot = new ParkingLot("PR1234", Integer.parseInt(commands[1]), Integer.parseInt(commands[2]));
+                    System.out.println(parkingLot.toString());
 
-        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.CAR);
-        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.BIKE);
-//        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.TRUCK);
-//
-        parkingLot.DisplayStatus(DisplayType.FREE_SLOTS,VehicleType.CAR);
-//        parkingLot.DisplayStatus(DisplayType.FREE_SLOTS,VehicleType.BIKE);
-//        parkingLot.DisplayStatus(DisplayType.FREE_SLOTS,VehicleType.TRUCK);
+                }
+                case "display" -> {
+                    if(commands[1].equals("free_count")){
+                        parkingLot.DisplayStatus(DisplayType.FREE_COUNT, VehicleType.valueOf(commands[2].toUpperCase()));
 
-        parkingLot.DisplayStatus(DisplayType.OCCUPIED_SLOTS,VehicleType.CAR);
-        parkingLot.DisplayStatus(DisplayType.OCCUPIED_SLOTS,VehicleType.BIKE);
-        parkingLot.DisplayStatus(DisplayType.OCCUPIED_SLOTS,VehicleType.TRUCK);
-
-
-        Car vehicle1=new Car("KA-01-DB-1234", "black");
-        // vehicle1.setVehicleType(VehicleType.CAR);
-        // vehicle1.setColor("black");
-        // vehicle1.setRegNumber("KA-01-DB-1234");
-        Bike vehicle2 = new Bike("KA-01-DB-1234", "red");
-
-        List<Ticket> ticket=new ArrayList<>();
-        for(Vehicle vehicle: List.of(vehicle1, vehicle2)){
-            var temp=parkingLot.park(vehicle);
-            ticket.add(temp);
-            System.out.println(temp != null ? "Parked Successfully" + vehicle : "Park UnSuccessfull " + vehicle);
+                    }
+                    else if(commands[1].equals("free_slots")){
+                        parkingLot.DisplayStatus(DisplayType.FREE_SLOTS, VehicleType.valueOf(commands[2].toUpperCase()));
+                    }
+                    else if(commands[1].equals("occupied_slots")){
+                        parkingLot.DisplayStatus(DisplayType.OCCUPIED_SLOTS, VehicleType.valueOf(commands[2].toUpperCase()));
+                    }
+                }
+                case "park_vehicle" -> {
+                    if(commands[1].toUpperCase().equals("CAR")){
+                        Car car = new Car(commands[2], commands[3]);
+                        var vehicleTicket = parkingLot.park(car);
+                        ticketList.add(vehicleTicket);
+                    }
+                    else if(commands[1].toUpperCase().equals("BIKE")){
+                        Bike bike = new Bike(commands[2], commands[3]);
+                        var vehicleTicket = parkingLot.park(bike);
+                        ticketList.add(vehicleTicket);
+                    }
+                    else if(commands[1].toUpperCase().equals("TRUCK")){
+                        Truck truck = new Truck(commands[2], commands[3]);
+                        var vehicleTicket = parkingLot.park(truck);
+                        ticketList.add(vehicleTicket);
+                        System.out.println(ticketList);
+                    }
+                }
+                case "unpark_vehicle" -> {
+                    Ticket ticketToRemove = null;
+                    for(Ticket ticket: ticketList){
+                        if(ticket.getId().equals(commands[1])){
+                            ticketToRemove = ticket;
+                        }
+                    }
+                    parkingLot.unPark(ticketToRemove);
+                }
+            }
         }
-
-        parkingLot.DisplayStatus(DisplayType.OCCUPIED_SLOTS,VehicleType.CAR);
-        parkingLot.DisplayStatus(DisplayType.FREE_SLOTS,VehicleType.CAR);
-        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.BIKE);
-
-        parkingLot.unPark(ticket.get(1));
-
-        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.CAR);
-        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.BIKE);
-//        parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.TRUCK);
-
     }
 }

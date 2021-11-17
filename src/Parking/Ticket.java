@@ -6,6 +6,11 @@ public class Ticket {
     private ParkingFloor floor;
     private ParkingSlot slot;
 
+    public Ticket(ParkingFloor floor, ParkingSlot slot){
+        this.floor = floor;
+        this.slot = slot;
+    }
+
     public String getId() {
         return id;
     }
@@ -28,10 +33,6 @@ public class Ticket {
 
     public void setSlot(ParkingSlot slot) {
         this.slot = slot;
-    }
-
-    Ticket create(ParkingFloor floor,ParkingSlot slot,Vehicle vehicle){
-        return new Ticket();
     }
 
 }
