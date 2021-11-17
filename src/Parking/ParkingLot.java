@@ -1,10 +1,11 @@
 package Parking;
+import java.lang.reflect.Array;
 import java.util.*;
 import vehicle.Vehicle;
 import vehicle.VehicleType;
 
 public class ParkingLot {
-    private List<ParkingFloor> floors = null;
+    private List<ParkingFloor> floors;
     private String name;
     private Map<Ticket,Vehicle> tickets;
     private int slotsPerFloor;
@@ -15,19 +16,21 @@ public class ParkingLot {
 
 
     public ParkingLot(String name,int floors,int slotsPerFloor){
-//        this.floors = new ArrayList<ParkingFloor>();
+        this.floors = new ArrayList<ParkingFloor>();
+
         this.tickets=new HashMap<>();
         this.name=name;
         this.slotsPerFloor = slotsPerFloor;
         this.noOfFloors = floors;
 
-        List<ParkingSlot> tempSlots = new ArrayList<ParkingSlot>();
+        List<ParkingSlot> tempSlots;
         List<ParkingFloor> tempFloors = new ArrayList<ParkingFloor>();
-
+        ParkingFloor floor;
+        ParkingSlot slot;
         for(int i=1; i<=floors; i++){
-            ParkingFloor floor;
+            tempSlots = new ArrayList<ParkingSlot>();
             for(int j=1; j <= slotsPerFloor; j++){
-                ParkingSlot slot;
+
                 if(j == 1){
                     slot = new ParkingSlot(j, VehicleType.TRUCK);
                 }
@@ -39,9 +42,9 @@ public class ParkingLot {
                 tempSlots.add(slot);
             }
             floor = new ParkingFloor(i, tempSlots);
-            tempFloors.add(floor);
+            this.floors.add(floor);
+
         }
-        this.floors = tempFloors;
     }
 
     public String getName() {
@@ -89,48 +92,49 @@ public class ParkingLot {
 
     public boolean unPark(Ticket ticket){
         if(tickets.containsKey(ticket)){
-            ticket.getSlot().setOccupied();
+            ticket.getSlot().setFree(true);
             tickets.remove(ticket);
             return true;
         }
         return false;
     }
 
-    public String toString(){
-        return "Created parking lot with " + this.noOfFloors + " floors and " + this.slotsPerFloor + " slots per floor";
-    }
 
     public void DisplayStatus(DisplayType displayType, VehicleType vehicleType){
 
         switch (displayType){
-
             case FREE_COUNT -> {
                 for(ParkingFloor floor:floors){
                     int count=0;
                     for(ParkingSlot slot:floor.getParkingSlots()){
-                        if(slot.getVehicleType()==vehicleType && slot.getStatus() == true){
+                        if(slot.getVehicleType() == vehicleType && slot.getStatus()){
                             count++;
                         }
                     }
-                    System.out.println(" ParkingFloor with "+vehicleType+" has "+count+" free slots");
+                    System.out.println("No. of free slots for " + vehicleType +" on Floor "+floor.getFloor()+ ": " + count);
                 }
 
             }
             case FREE_SLOTS -> {
+
                 for(ParkingFloor floor:floors){
+                    ArrayList<Integer> tempFreeSlots = new ArrayList<>();
                     for(ParkingSlot slot:floor.getParkingSlots()){
                         if(slot.getVehicleType()==vehicleType && slot.getStatus()){
-                            System.out.println("ParkingFloor with "+vehicleType+" has "+ slot+ " free");
+                            tempFreeSlots.add(slot.getSlotId());
                         }
                     }
+                    System.out.println("Free slots for " + vehicleType +" on Floor "+floor.getFloor()+ ": " + tempFreeSlots);
                 }
             }
             case OCCUPIED_SLOTS -> {
                 for(ParkingFloor floor:floors){
+                    ArrayList<Integer> tempOccupiedSlots = new ArrayList<>();
                     for(ParkingSlot slot:floor.getParkingSlots()){
-                        if(slot.getVehicleType()==vehicleType && !slot.getStatus()){
-                            System.out.println("ParkingFloor with "+vehicleType+" has "+ slot+ " occupied");
+                        if(slot.getVehicleType()==vehicleType && slot.getStatus()==false){
+                            tempOccupiedSlots.add(slot.getSlotId());
                         }
+                        System.out.println("Occupied slots for "+vehicleType+" on Floor "+ floor.getFloor() + tempOccupiedSlots);
                     }
                 }
             }

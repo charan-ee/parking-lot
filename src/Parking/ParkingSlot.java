@@ -7,21 +7,16 @@ public class ParkingSlot {
     private ParkingSlotType type;
     private Vehicle vehicle;
     private VehicleType vehicleType;
-    private boolean isFree;
+    private boolean isFree = true;
 
-    public ParkingSlot(){
-        isFree = true;
-    }
+//    public ParkingSlot(){
+//        isFree = true;
+//    }
 
     public ParkingSlot(int slotId, VehicleType type){
         this.slotId = slotId;
         this.vehicleType = type;
     }
-
-    // public void assignVehicletoSlot(Vehicle vehicle){
-    //     this.vehicle = vehicle;
-    //     isFree = false;
-    // }
 
     public VehicleType getVehicleType(){
         return vehicleType;
@@ -32,15 +27,24 @@ public class ParkingSlot {
     }
 
     public void setOccupied(){
-        isFree = false;
+        this.isFree = false;
+    }
+
+    public void setFree(boolean status){
+        this.isFree = status;
     }
 
     public boolean getStatus(){
         return isFree;
     }
 
+    public int getSlotId(){
+        return slotId;
+    }
+
     public String toString() {
         return "Slot{" +
+                " slotId=" + slotId +
                 ", occupied=" + isFree +
                 ", vehicleType=" + vehicleType +
                 '}';

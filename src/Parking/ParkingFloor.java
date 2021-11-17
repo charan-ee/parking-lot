@@ -17,5 +17,9 @@ public class ParkingFloor {
         return this.parkingSlots;
     }
 
+    public int getFloor(){
+        return floor;
+    }
+
 
 }
