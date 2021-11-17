@@ -9,7 +9,7 @@ public class App {
 
         //Default Parking lot
         ParkingLot parkingLot=new ParkingLot("PR1234",2,6);
-
+        System.out.println("Created parking lot with " + parkingLot.getNoOfFloors() + " floors and " + parkingLot.getSlotsPerFloor() + " slots per floor");
         parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.CAR);
         parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.BIKE);
         parkingLot.DisplayStatus(DisplayType.FREE_COUNT,VehicleType.TRUCK);

@@ -5,3 +5,6 @@ public enum ParkingSlotType {
     BIKE,
     CAR
 }
+
+
+

@@ -4,42 +4,58 @@ import vehicle.Vehicle;
 import vehicle.VehicleType;
 
 public class ParkingLot {
-    private List<ParkingFloor> floors;
+    private List<ParkingFloor> floors = null;
     private String name;
     private Map<Ticket,Vehicle> tickets;
+    private int slotsPerFloor;
+    private int noOfFloors;
+
+    ParkingLot(){
+    }
+
+
+    public ParkingLot(String name,int floors,int slotsPerFloor){
+//        this.floors = new ArrayList<ParkingFloor>();
+        this.tickets=new HashMap<>();
+        this.name=name;
+        this.slotsPerFloor = slotsPerFloor;
+        this.noOfFloors = floors;
+
+        List<ParkingSlot> tempSlots = new ArrayList<ParkingSlot>();
+        List<ParkingFloor> tempFloors = new ArrayList<ParkingFloor>();
+
+        for(int i=1; i<=floors; i++){
+            ParkingFloor floor;
+            for(int j=1; j <= slotsPerFloor; j++){
+                ParkingSlot slot;
+                if(j == 1){
+                    slot = new ParkingSlot(j, VehicleType.TRUCK);
+                }
+                else if(j == 2 || j == 3){
+                    slot = new ParkingSlot(j, VehicleType.BIKE);
+                }else {
+                    slot = new ParkingSlot(j, VehicleType.CAR);
+                }
+                tempSlots.add(slot);
+            }
+            floor = new ParkingFloor(i, tempSlots);
+            tempFloors.add(floor);
+        }
+        this.floors = tempFloors;
+    }
 
     public String getName() {
         return name;
     }
-    public ParkingLot(){
+
+    public int getNoOfFloors(){
+        return noOfFloors;
     }
 
-    public ParkingLot(String name,int floors,int slotPerFloor){
-        this.tickets=new HashMap<>();
-        this.name=name;
-        ParkingSlot slot1=new ParkingSlot(1, VehicleType.TRUCK);
-        ParkingSlot slot2=new ParkingSlot(2, VehicleType.BIKE);
-        ParkingSlot slot3=new ParkingSlot(3, VehicleType.CAR);
-        ParkingSlot slot4=new ParkingSlot(4, VehicleType.CAR);
-        ParkingSlot slot5=new ParkingSlot(5, VehicleType.CAR);
-        ParkingSlot slot6=new ParkingSlot(6, VehicleType.CAR);
-        ParkingSlot slot7=new ParkingSlot(7, VehicleType.TRUCK);
-        ParkingSlot slot8=new ParkingSlot(8, VehicleType.BIKE);
-        ParkingSlot slot9=new ParkingSlot(9, VehicleType.CAR);
-        ParkingSlot slot10=new ParkingSlot(10, VehicleType.CAR);
-        ParkingSlot slot11=new ParkingSlot(11, VehicleType.CAR);
-        ParkingSlot slot12=new ParkingSlot(12, VehicleType.CAR);
-        ParkingFloor floor1=new ParkingFloor(1, List.of(slot1,slot2,slot3,slot4,slot5,slot6));
-        ParkingFloor floor2=new ParkingFloor(2, List.of(slot7,slot8,slot9,slot10,slot11,slot12));
-        this.floors=List.of(floor1,floor2);
+    public int getSlotsPerFloor(){
+        return slotsPerFloor;
     }
-    
-    public String toString() {
-        return "ParkingLot{" +
-                "floors=" + floors +
-                ", name='" + name + '\'' +
-                '}';
-    }
+
 
     public void setName(String name) {
         this.name = name;
@@ -80,6 +96,10 @@ public class ParkingLot {
         return false;
     }
 
+    public String toString(){
+        return "Created parking lot with " + this.noOfFloors + " floors and " + this.slotsPerFloor + " slots per floor";
+    }
+
     public void DisplayStatus(DisplayType displayType, VehicleType vehicleType){
 
         switch (displayType){
@@ -88,7 +108,7 @@ public class ParkingLot {
                 for(ParkingFloor floor:floors){
                     int count=0;
                     for(ParkingSlot slot:floor.getParkingSlots()){
-                        if(slot.getVehicleType()==vehicleType && slot.getStatus()){
+                        if(slot.getVehicleType()==vehicleType && slot.getStatus() == true){
                             count++;
                         }
                     }
